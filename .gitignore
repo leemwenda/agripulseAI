@@ -1,0 +1,27 @@
+# Data folders
+collected_data/
+combined_dataset/
+multicamcows_subset/
+multicamcows_balanced/
+opencows2020/
+gradio_samples/
+test_batch/
+
+# Archives
+*.zip
+
+# Model checkpoints and databases
+*.pt
+*.pth
+cow_database.json
+
+# Logs
+*.log
+training_log.txt
+training_combined_log.txt
+training_combined_v2_log.txt
+
+# Python
+__pycache__/
+*.pyc
+.venv/
