@@ -25,3 +25,8 @@ training_combined_v2_log.txt
 __pycache__/
 *.pyc
 .venv/
+
+# Disease detection data & models
+disease-detection/data/
+disease-detection/models/*.pt
+disease-detection/models/*.pth
