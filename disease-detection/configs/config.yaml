@@ -1,6 +1,34 @@
-data_dir: data/processed
-checkpoint_dir: models
+model_version: "cattle-health-v2"
+
+# Image / training settings
+image_size: 224
 batch_size: 16
-learning_rate: 0.001
 epochs: 30
-early_stopping_patience: 5
+patience: 5           # early stopping: stop if val_acc doesn't improve for N epochs
+learning_rate: 0.0001
+uncertain_margin: 0.15  # if top-2 class probabilities are within this margin, predict.py returns "uncertain"
+
+# Data locations
+data:
+  raw_dir: data/raw/cattle_health_v1       # each class is one subfolder under here
+  processed_dir: data/processed
+  split: [0.7, 0.15, 0.15]                 # train / val / test
+  seed: 42
+
+# ---- THE ONLY PART YOU EDIT TO ADD A NEW DISEASE ----
+# `name`  -> the label the model will output
+# `dir`   -> the subfolder name under data/raw/cattle_health_v1/ holding that class's images
+#
+# To add a disease:
+#   1. Put its labeled images in data/raw/cattle_health_v1/<some_folder_name>/
+#   2. Add a new "- name: ... / dir: ..." block below
+#   3. Rerun the pipeline (prepare_dataset.py -> train_baseline.py -> evaluate.py)
+classes:
+  - name: healthy
+    dir: healthycows
+  - name: lumpy_skin_disease
+    dir: lumpycows
+  # - name: foot_and_mouth_disease
+  #   dir: fmd_cows
+  # - name: mange
+  #   dir: mange_cows

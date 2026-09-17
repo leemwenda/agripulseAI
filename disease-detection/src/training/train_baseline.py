@@ -1,118 +1,120 @@
 #!/usr/bin/env python3
 """
-train_baseline.py - Phase 4: train a baseline Healthy vs Lumpy Skin Disease
-classifier using transfer learning (ResNet18, ImageNet-pretrained, frozen
-backbone - same CPU-friendly approach already used for the re-id model in
-train_local_v2.py).
+Train a baseline image classifier over N classes (read from config.yaml).
+
+Key design choice: the trained checkpoint stores its own class list
+(model_version, classes, image_size) alongside the weights. evaluate.py and
+predict.py read the class list FROM THE CHECKPOINT, not from config.yaml —
+so an old checkpoint always stays self-describing even if you later add more
+diseases to config.yaml for the next training run.
 
 Usage:
-    python3 train_baseline.py --config configs/config.yaml
+    python3 train_baseline.py --config ../../configs/config.yaml
 """
 import argparse
-import os
-from datetime import datetime
+from datetime import datetime, timezone
+from pathlib import Path
 
 import torch
 import torch.nn as nn
-import torchvision.models as models
-import torchvision.transforms as T
 import yaml
 from torch.utils.data import DataLoader
-from torchvision.datasets import ImageFolder
+from torchvision import datasets, models, transforms
 
 
-def build_model(num_classes=2):
+def load_config(config_path):
+    with open(config_path) as f:
+        return yaml.safe_load(f)
+
+
+def build_model(num_classes):
+    # ResNet18: lighter than ResNet50, trains faster on CPU. Swap freely —
+    # nothing else in this file depends on the specific backbone.
     model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
-    for param in model.parameters():
-        param.requires_grad = False
-    model.fc = nn.Linear(model.fc.in_features, num_classes)
+    in_features = model.fc.in_features
+    model.fc = nn.Linear(in_features, num_classes)
     return model
 
 
-def get_transforms():
-    train_tf = T.Compose([
-        T.Resize((224, 224)),
-        T.RandomHorizontalFlip(),
-        T.RandomRotation(15),
-        T.ColorJitter(brightness=0.2, contrast=0.2),
-        T.ToTensor(),
-        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+def make_loaders(processed_dir, image_size, batch_size):
+    train_tf = transforms.Compose([
+        transforms.Resize((image_size, image_size)),
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomRotation(10),
+        transforms.ColorJitter(brightness=0.2, contrast=0.2),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
-    eval_tf = T.Compose([
-        T.Resize((224, 224)),
-        T.ToTensor(),
-        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    eval_tf = transforms.Compose([
+        transforms.Resize((image_size, image_size)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
-    return train_tf, eval_tf
+
+    train_ds = datasets.ImageFolder(Path(processed_dir) / "train", transform=train_tf)
+    val_ds = datasets.ImageFolder(Path(processed_dir) / "val", transform=eval_tf)
+
+    # ImageFolder sorts class names alphabetically — this becomes the
+    # canonical class order baked into the checkpoint.
+    classes = train_ds.classes
+
+    train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
+    val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False)
+    return train_loader, val_loader, classes
 
 
-def evaluate(model, loader, device, criterion):
-    model.eval()
-    total_loss = 0.0
-    correct = 0
-    total = 0
-    with torch.no_grad():
-        for images, labels in loader:
-            images, labels = images.to(device), labels.to(device)
-            outputs = model(images)
+def run_epoch(model, loader, criterion, optimizer, device, train):
+    model.train() if train else model.eval()
+    total_loss, correct, total = 0.0, 0, 0
+    context = torch.enable_grad() if train else torch.no_grad()
+    with context:
+        for imgs, labels in loader:
+            imgs, labels = imgs.to(device), labels.to(device)
+            if train:
+                optimizer.zero_grad()
+            outputs = model(imgs)
             loss = criterion(outputs, labels)
-            total_loss += loss.item() * images.size(0)
+            if train:
+                loss.backward()
+                optimizer.step()
+            total_loss += loss.item() * imgs.size(0)
             preds = outputs.argmax(dim=1)
             correct += (preds == labels).sum().item()
-            total += labels.size(0)
+            total += imgs.size(0)
     return total_loss / total, correct / total
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--config", required=True)
-    args = parser.parse_args()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--config", default="configs/config.yaml")
+    args = ap.parse_args()
 
-    with open(args.config) as f:
-        config = yaml.safe_load(f)
-
+    cfg = load_config(args.config)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
-    train_tf, eval_tf = get_transforms()
-    train_ds = ImageFolder(os.path.join(config["data_dir"], "train"), transform=train_tf)
-    val_ds = ImageFolder(os.path.join(config["data_dir"], "val"), transform=eval_tf)
+    train_loader, val_loader, classes = make_loaders(
+        cfg["data"]["processed_dir"], cfg["image_size"], cfg["batch_size"]
+    )
+    print(f"Classes: {classes}")
+    print(f"Train images: {len(train_loader.dataset)}, Val images: {len(val_loader.dataset)}")
 
-    print(f"Classes: {train_ds.classes}")
-    print(f"Train images: {len(train_ds)}, Val images: {len(val_ds)}")
-
-    train_loader = DataLoader(train_ds, batch_size=config["batch_size"], shuffle=True)
-    val_loader = DataLoader(val_ds, batch_size=config["batch_size"], shuffle=False)
-
-    model = build_model(num_classes=len(train_ds.classes)).to(device)
+    model = build_model(len(classes)).to(device)
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.fc.parameters(), lr=config["learning_rate"])
+    optimizer = torch.optim.Adam(model.parameters(), lr=cfg["learning_rate"])
 
     best_val_acc = 0.0
-    best_epoch = -1
-    patience = config.get("early_stopping_patience", 5)
+    best_epoch = 0
     epochs_without_improvement = 0
+    models_dir = Path("models")
+    models_dir.mkdir(exist_ok=True)
+    checkpoint_path = models_dir / "cattle_health_classifier.pt"
 
-    os.makedirs(config["checkpoint_dir"], exist_ok=True)
-    checkpoint_path = os.path.join(config["checkpoint_dir"], "lsd_classifier_v1.pt")
-
-    for epoch in range(config["epochs"]):
-        model.train()
-        running_loss = 0.0
-        for images, labels in train_loader:
-            images, labels = images.to(device), labels.to(device)
-            optimizer.zero_grad()
-            outputs = model(images)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
-            running_loss += loss.item() * images.size(0)
-
-        train_loss = running_loss / len(train_ds)
-        val_loss, val_acc = evaluate(model, val_loader, device, criterion)
-
-        print(f"Epoch {epoch + 1}/{config['epochs']} - "
-              f"train_loss: {train_loss:.4f} - val_loss: {val_loss:.4f} - val_acc: {val_acc:.4f}")
+    for epoch in range(1, cfg["epochs"] + 1):
+        train_loss, _ = run_epoch(model, train_loader, criterion, optimizer, device, train=True)
+        val_loss, val_acc = run_epoch(model, val_loader, criterion, optimizer, device, train=False)
+        print(f"Epoch {epoch}/{cfg['epochs']} - train_loss: {train_loss:.4f} "
+              f"- val_loss: {val_loss:.4f} - val_acc: {val_acc:.4f}")
 
         if val_acc > best_val_acc:
             best_val_acc = val_acc
@@ -120,21 +122,21 @@ def main():
             epochs_without_improvement = 0
             torch.save({
                 "model_state_dict": model.state_dict(),
-                "classes": train_ds.classes,
-                "epoch": epoch,
+                "classes": classes,
+                "image_size": cfg["image_size"],
+                "model_version": cfg["model_version"],
+                "uncertain_margin": cfg.get("uncertain_margin", 0.15),
+                "trained_at": datetime.now(timezone.utc).isoformat(),
                 "val_acc": val_acc,
-                "model_version": "lsd-classifier-v1.0",
-                "trained_at": datetime.now().isoformat(),
-                "config": config,
             }, checkpoint_path)
             print(f"  -> New best model saved (val_acc={val_acc:.4f})")
         else:
             epochs_without_improvement += 1
-            if epochs_without_improvement >= patience:
-                print(f"Early stopping - no improvement for {patience} epochs.")
+            if epochs_without_improvement >= cfg["patience"]:
+                print(f"Early stopping - no improvement for {cfg['patience']} epochs.")
                 break
 
-    print(f"\nTraining complete. Best val_acc: {best_val_acc:.4f} at epoch {best_epoch + 1}")
+    print(f"\nTraining complete. Best val_acc: {best_val_acc:.4f} at epoch {best_epoch}")
     print(f"Checkpoint saved to: {checkpoint_path}")
 
 

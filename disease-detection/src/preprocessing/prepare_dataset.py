@@ -1,130 +1,104 @@
 #!/usr/bin/env python3
 """
-prepare_dataset.py - Phase 3: organize raw Kaggle LSD images into a clean
-train/val/test split.
+Organize raw class folders into train/val/test splits.
+
+Generic over N classes: reads the class list (name + source folder) from
+config.yaml instead of hardcoding "healthycows" / "lumpycows". Adding a new
+disease to the model does NOT require touching this file — just add a new
+entry under `classes:` in configs/config.yaml.
 
 Usage:
-    python3 prepare_dataset.py --raw_dir data/raw/lsd_v1 --out_dir data/processed
-
-This auto-discovers class folders under raw_dir (whatever they're actually
-named) and maps them to two canonical classes - "healthy" and
-"lumpy_skin_disease" - via keyword matching, since Kaggle datasets use
-inconsistent folder naming (e.g. "Normal", "Lumpy Cows", "Cows_Healthy").
-If a folder doesn't match either keyword set, it's skipped and reported
-rather than silently dropped or wrongly guessed.
-
-KNOWN LIMITATION: this is a random split, not a leakage-safe one. The raw
-Kaggle dataset provides no per-animal identifiers, so we can't guarantee the
-same individual cow never appears in both train and test - this is a known
-gap flagged in the project's Phase 5 (data structure) and Phase 23
-(real-world testing) requirements. Treat test-set metrics as optimistic
-until validated on genuinely new, unseen photos.
+    python3 prepare_dataset.py --config ../../configs/config.yaml
 """
 import argparse
-import os
 import random
 import shutil
 from pathlib import Path
 
-HEALTHY_KEYWORDS = ["healthy", "normal", "heal"]
-LSD_KEYWORDS = ["lumpy", "lsd", "infected", "disease"]
+import yaml
 
-IMG_EXTENSIONS = {".jpg", ".jpeg", ".png"}
-
-
-def classify_folder_name(name):
-    lower = name.lower()
-    if any(k in lower for k in LSD_KEYWORDS):
-        return "lumpy_skin_disease"
-    if any(k in lower for k in HEALTHY_KEYWORDS):
-        return "healthy"
-    return None
+IMG_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp"}
 
 
-def find_class_images(raw_dir):
-    """Walks raw_dir, mapping every leaf folder containing images to a
-    canonical class name. Returns (class_images, unmatched_folder_names)."""
-    raw_dir = Path(raw_dir)
-    class_images = {"healthy": [], "lumpy_skin_disease": []}
-    unmatched_folders = set()
-
-    for root, _dirs, files in os.walk(raw_dir):
-        images = [f for f in files if Path(f).suffix.lower() in IMG_EXTENSIONS]
-        if not images:
-            continue
-        folder_name = Path(root).name
-        cls = classify_folder_name(folder_name)
-        if cls is None:
-            unmatched_folders.add(folder_name)
-            continue
-        for f in images:
-            class_images[cls].append(Path(root) / f)
-
-    return class_images, unmatched_folders
+def load_config(config_path):
+    with open(config_path) as f:
+        return yaml.safe_load(f)
 
 
-def split_and_copy(class_images, out_dir, train_frac=0.7, val_frac=0.15, seed=42):
-    random.seed(seed)
-    out_dir = Path(out_dir)
-    stats = {}
+def list_images(folder: Path):
+    return sorted(p for p in folder.iterdir() if p.suffix.lower() in IMG_EXTENSIONS)
 
-    for cls, paths in class_images.items():
-        paths = list(paths)
-        random.shuffle(paths)
-        n = len(paths)
-        n_train = int(n * train_frac)
-        n_val = int(n * val_frac)
 
-        splits = {
-            "train": paths[:n_train],
-            "val": paths[n_train:n_train + n_val],
-            "test": paths[n_train + n_val:],
-        }
-
-        stats[cls] = {}
-        for split_name, split_paths in splits.items():
-            split_dir = out_dir / split_name / cls
-            split_dir.mkdir(parents=True, exist_ok=True)
-            for i, src in enumerate(split_paths):
-                dst = split_dir / f"{cls}_{i:04d}{src.suffix.lower()}"
-                shutil.copy2(src, dst)
-            stats[cls][split_name] = len(split_paths)
-
-    return stats
+def split_list(items, ratios, seed):
+    rng = random.Random(seed)
+    items = items[:]
+    rng.shuffle(items)
+    n = len(items)
+    n_train = int(n * ratios[0])
+    n_val = int(n * ratios[1])
+    return {
+        "train": items[:n_train],
+        "val": items[n_train:n_train + n_val],
+        "test": items[n_train + n_val:],
+    }
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--raw_dir", required=True)
-    parser.add_argument("--out_dir", required=True)
-    parser.add_argument("--train_frac", type=float, default=0.7)
-    parser.add_argument("--val_frac", type=float, default=0.15)
-    args = parser.parse_args()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--config", default="configs/config.yaml")
+    args = ap.parse_args()
 
-    class_images, unmatched = find_class_images(args.raw_dir)
+    cfg = load_config(args.config)
+    raw_dir = Path(cfg["data"]["raw_dir"])
+    out_dir = Path(cfg["data"]["processed_dir"])
+    ratios = cfg["data"]["split"]
+    seed = cfg["data"].get("seed", 42)
+    classes = cfg["classes"]
+
+    if not classes:
+        raise SystemExit("No classes defined in config.yaml under `classes:` — nothing to do.")
 
     print("Discovered images per class:")
-    for cls, paths in class_images.items():
-        print(f"  {cls}: {len(paths)}")
+    per_class_counts = {}
+    per_class_images = {}
+    for c in classes:
+        name, subdir = c["name"], c["dir"]
+        folder = raw_dir / subdir
+        if not folder.is_dir():
+            print(f"  WARNING: {folder} does not exist — skipping class '{name}'")
+            continue
+        imgs = list_images(folder)
+        if not imgs:
+            print(f"  WARNING: {folder} has no images — skipping class '{name}'")
+            continue
+        per_class_images[name] = imgs
+        per_class_counts[name] = len(imgs)
+        print(f"  {name}: {len(imgs)}")
 
-    if unmatched:
-        print("\nWARNING: found image folders that didn't match a known class "
-              "and were SKIPPED:")
-        for name in sorted(unmatched):
-            print(f"  {name}")
-        print("If any of these should count as healthy/lumpy, rename the "
-              "folder or edit HEALTHY_KEYWORDS/LSD_KEYWORDS above and re-run.")
+    if len(per_class_images) < 2:
+        raise SystemExit(
+            "Need at least 2 classes with images to train a classifier. "
+            "Check your raw_dir and class `dir` values in config.yaml."
+        )
 
-    if not class_images["healthy"] or not class_images["lumpy_skin_disease"]:
-        print("\nERROR: at least one class has zero images. Stopping - fix "
-              "the folder mapping before proceeding.")
-        return
-
-    stats = split_and_copy(class_images, args.out_dir, args.train_frac, args.val_frac)
+    # Clean and recreate processed_dir
+    if out_dir.exists():
+        shutil.rmtree(out_dir)
+    for split in ("train", "val", "test"):
+        for name in per_class_images:
+            (out_dir / split / name).mkdir(parents=True, exist_ok=True)
 
     print("\nFinal split:")
-    for cls, splits in stats.items():
-        print(f"  {cls}: {splits}")
+    for name, imgs in per_class_images.items():
+        splits = split_list(imgs, ratios, seed)
+        for split_name, split_imgs in splits.items():
+            for img_path in split_imgs:
+                shutil.copy2(img_path, out_dir / split_name / name / img_path.name)
+        print(f"  {name}: {{'train': {len(splits['train'])}, "
+              f"'val': {len(splits['val'])}, 'test': {len(splits['test'])}}}")
+
+    print(f"\nClasses in this dataset: {list(per_class_images.keys())}")
+    print(f"Processed dataset written to: {out_dir}")
 
 
 if __name__ == "__main__":
