@@ -244,21 +244,23 @@ def confirm_identification(image, confirmed_cow_id):
 _detector = None
 _detector_transform = None
 _detector_categories = None
-NON_COW_SCORE_THRESHOLD = 0.4
+NON_COW_SCORE_THRESHOLD = 0.3
 PENDING_GROUPS_DIR = os.path.join(COLLECTED_DATA_DIR, "_pending_groups")
 
 
 def _load_detector():
     """Lazily loads a general-purpose COCO-pretrained object detector the
     first time it's needed (downloads weights on first run if not cached).
-    This is separate from the re-id model - it only tells cattle apart from
-    humans/other objects, it never compares one cow to another."""
+    Using Faster R-CNN here rather than a lightweight SSD model - it's
+    slower on CPU, but noticeably more reliable at confidently detecting
+    people and everyday objects, which matters more than speed for a
+    strict cattle-only filter."""
     global _detector, _detector_transform, _detector_categories
     if _detector is not None:
         return
     import torchvision.models.detection as detection_models
-    weights = detection_models.SSDLite320_MobileNet_V3_Large_Weights.DEFAULT
-    _detector = detection_models.ssdlite320_mobilenet_v3_large(weights=weights).to(device)
+    weights = detection_models.FasterRCNN_ResNet50_FPN_V2_Weights.DEFAULT
+    _detector = detection_models.fasterrcnn_resnet50_fpn_v2(weights=weights).to(device)
     _detector.eval()
     _detector_transform = weights.transforms()
     _detector_categories = weights.meta["categories"]
