@@ -32,3 +32,5 @@ classes:
   #   dir: fmd_cows
   # - name: mange
   #   dir: mange_cows
+  - name: foot_and_mouth_disease
+    dir: fmd_cows
