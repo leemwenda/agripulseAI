@@ -1,0 +1,35 @@
+id: lumpy_skin_disease
+name: Lumpy skin disease
+pathogen: "Lumpy skin disease virus (capripoxvirus), spread mainly by biting flies, mosquitoes and ticks"
+detection: symptoms+image  # image | symptoms | symptoms+image | lab_only
+zoonotic: false
+notifiable: true
+urgency: urgent            # routine | soon | urgent | emergency
+min_signs: 2
+solo_signs: [skin_nodules] # firm skin nodules alone (e.g. seen in a photo) are enough to flag it
+summary: >
+  Viral disease that causes firm, raised skin nodules over the body, fever, swollen
+  lymph nodes and a drop in milk yield. Spreads quickly through insects.
+signs:                     # weight 3 = characteristic, 2 = common, 1 = supportive
+  skin_nodules: 3
+  fever: 2
+  enlarged_lymph_nodes: 2
+  swollen_limbs_or_brisket: 2
+  watery_eyes: 1
+  nasal_discharge: 1
+  reduced_milk_yield: 1
+  loss_of_appetite: 1
+  ticks_present: 1
+differentials:
+  - Pseudo-lumpy skin disease (bovine herpesvirus 2)
+  - Insect bite reactions
+  - Ringworm
+  - Dermatophilosis
+  - Cattle warts
+  - Besnoitiosis
+confirm_with: "PCR test on a skin nodule biopsy or scab, arranged through the vet or a veterinary lab."
+advice:
+  - "Tell your vet or the county veterinary office straight away - this is a reportable disease and spreads fast."
+  - "Separate affected animals and do not move cattle in or out of the herd."
+  - "Control biting flies and ticks; ask the vet which insecticide treatment to use."
+  - "Ask your vet about vaccinating the rest of the herd."

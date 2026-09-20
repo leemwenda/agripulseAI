@@ -1,4 +1,4 @@
-model_version: "cattle-health-v2"
+model_version: "cattle-health-v3"
 
 # Image / training settings
 image_size: 224
@@ -23,6 +23,11 @@ data:
 #   1. Put its labeled images in data/raw/cattle_health_v1/<some_folder_name>/
 #   2. Add a new "- name: ... / dir: ..." block below
 #   3. Rerun the pipeline (prepare_dataset.py -> train_baseline.py -> evaluate.py)
+#
+# foot_and_mouth_disease is DISABLED - the Kaggle source dataset didn't
+# generalize to real farm photos (confirmed 97%-confidence false positive
+# on a genuinely healthy cow, see captures/). Do not re-enable without new,
+# more representative training data.
 classes:
   - name: healthy
     dir: healthycows
@@ -32,5 +37,3 @@ classes:
   #   dir: fmd_cows
   # - name: mange
   #   dir: mange_cows
-  - name: foot_and_mouth_disease
-    dir: fmd_cows

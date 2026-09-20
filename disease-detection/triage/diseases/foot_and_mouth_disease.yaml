@@ -1,0 +1,36 @@
+id: foot_and_mouth_disease
+name: Foot-and-mouth disease
+pathogen: "Foot-and-mouth disease virus (Aphthovirus; several serotypes)"
+detection: symptoms+image   # symptoms now; an image model would need mouth/hoof CLOSE-UPS, not whole-body photos
+zoonotic: false
+notifiable: true            # suspected cases must be reported to the veterinary authority
+urgency: emergency          # routine | soon | urgent | emergency
+min_signs: 2
+likely_at: 0.35             # many signs share the weight, so a lower bar than the 0.45 default
+summary: >
+  Highly contagious viral disease. Typical picture: fever, blisters and raw sores in the
+  mouth and between the claws, drooling and lameness, spreading quickly through the herd.
+  Rarely kills adult cattle but causes major losses (milk, growth) and trade restrictions.
+signs:                      # weight 3 = characteristic, 2 = common, 1 = supportive
+  mouth_blisters: 3
+  excessive_salivation: 3
+  hoof_lesions: 3
+  lameness: 2
+  fever: 2
+  teat_lesions: 2
+  multiple_animals_affected: 2
+  loss_of_appetite: 1
+  reduced_milk_yield: 1
+differentials:
+  - Lumpy skin disease
+  - Bovine viral diarrhoea / mucosal disease
+  - Malignant catarrhal fever
+  - Bluetongue
+  - Foot rot or another cause of lameness (if lameness is the main sign)
+confirm_with: "Laboratory test (PCR/antigen ELISA) on samples taken by a vet or the veterinary authority. Do not collect or move samples yourself."
+advice:
+  - "Report the suspicion to your vet and the county veterinary officer immediately."
+  - "Isolate sick animals and stop all movement of cattle, milk, feed, vehicles and people on and off the farm until cleared."
+  - "Do not visit other farms or markets. Disinfect boots, hands, tools and vehicles with a disinfectant your vet recommends."
+  - "Check every other animal daily for mouth, hoof and teat lesions and note the date each one starts."
+  - "Give soft feed and clean water; the vet decides on supportive treatment for sore mouths and feet."

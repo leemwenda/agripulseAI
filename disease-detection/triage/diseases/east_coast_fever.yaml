@@ -1,0 +1,32 @@
+id: east_coast_fever
+name: East Coast fever
+pathogen: "Theileria parva, spread by the brown ear tick (Rhipicephalus appendiculatus)"
+detection: symptoms        # image | symptoms | symptoms+image | lab_only
+zoonotic: false
+urgency: urgent            # routine | soon | urgent | emergency
+min_signs: 2               # need at least this many matching signs to be listed
+summary: >
+  Tick-borne disease that is often fatal in untreated cattle within 2-3 weeks.
+  Typical picture: high fever, then swollen lymph nodes, then breathing trouble.
+signs:                     # weight 3 = characteristic, 2 = common, 1 = supportive
+  enlarged_lymph_nodes: 3
+  fever: 2
+  ticks_present: 2
+  laboured_breathing: 2
+  frothy_nasal_discharge: 2
+  loss_of_appetite: 1
+  rapid_weight_loss: 1
+  watery_eyes: 1
+  diarrhoea: 1
+differentials:
+  - Anaplasmosis
+  - Babesiosis
+  - Other theileriosis
+  - Trypanosomiasis
+  - Contagious bovine pleuropneumonia (if breathing signs dominate)
+confirm_with: "Lymph node biopsy smear (looking for schizonts) or blood smear, read by a vet or lab."
+advice:
+  - "Call a vet the same day. Treatment works best when started early, before the animal is very sick."
+  - "Isolate the animal and do not move cattle in or out of the herd."
+  - "Record temperature at least twice a day and note when the swelling started."
+  - "Ask the vet about tick control and the ECF vaccination programme for the rest of the herd."
