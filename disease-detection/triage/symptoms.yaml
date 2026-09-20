@@ -41,3 +41,5 @@ signs:
     ask: "Are the legs, brisket or dewlap swollen?"
   nasal_discharge:
     ask: "Is there discharge from the nose?"
+  coughing:
+    ask: "Is the animal coughing?"

@@ -1,0 +1,17 @@
+# Written to lock in the fix for the false alarm: fever + swollen nodes + ticks must not suggest LSD.
+
+- name: nodules seen in a photo alone are enough to flag LSD
+  signs: [skin_nodules]
+  expect:
+    lumpy_skin_disease: {band: possible}
+
+- name: classic LSD - nodules, fever, swollen nodes
+  signs: [skin_nodules, fever, enlarged_lymph_nodes]
+  expect:
+    lumpy_skin_disease: {band: likely, rank: 1}
+
+- name: fever + swollen nodes + ticks (no lumps) must NOT list LSD
+  signs: [fever, enlarged_lymph_nodes, ticks_present]
+  expect:
+    lumpy_skin_disease: {band: absent}
+    east_coast_fever: {band: likely, rank: 1}

@@ -1,0 +1,54 @@
+# Expectations for East Coast fever. Written from the standard clinical picture (Merck Vet Manual,
+# WikiVet). A vet should review these: the expectations ARE the clinical judgement of the system.
+
+- name: classic case - fever, swollen nodes, ticks, breathing trouble
+  signs: [fever, enlarged_lymph_nodes, ticks_present, laboured_breathing]
+  expect:
+    east_coast_fever: {band: likely, rank: 1}
+
+- name: early case - fever, swollen nodes, ticks
+  signs: [fever, enlarged_lymph_nodes, ticks_present]
+  expect:
+    east_coast_fever: {band: likely, rank: 1}
+
+- name: late case - swollen nodes, breathing trouble, frothy nasal discharge
+  signs: [enlarged_lymph_nodes, laboured_breathing, frothy_nasal_discharge]
+  expect:
+    east_coast_fever: {band: likely, rank: 1}
+
+- name: fever and swollen nodes, ticks not reported (ticks are easy to miss)
+  signs: [fever, enlarged_lymph_nodes]
+  expect:
+    east_coast_fever: {band: listed, rank: 1}
+
+- name: fever + ticks alone is NOT enough (many tick-borne diseases look like this)
+  signs: [fever, ticks_present]
+  expect:
+    east_coast_fever: {band: absent}
+
+- name: fever + breathing trouble, nodes not checked - listed as possible so the app asks about nodes
+  signs: [fever, laboured_breathing, frothy_nasal_discharge]
+  expect:
+    east_coast_fever: {band: possible}
+
+- name: one sign only (swollen nodes) is never listed
+  signs: [enlarged_lymph_nodes]
+  expect:
+    east_coast_fever: {band: absent}
+
+- name: chronic wasting with swollen nodes - possible, never likely
+  signs: [enlarged_lymph_nodes, rapid_weight_loss, diarrhoea]
+  expect:
+    east_coast_fever: {band: possible}
+
+- name: lumpy skin picture must rank above ECF
+  signs: [skin_nodules, fever, enlarged_lymph_nodes]
+  expect:
+    lumpy_skin_disease: {band: likely, rank: 1}
+    east_coast_fever: {band: not_likely}
+
+- name: foot-and-mouth picture must not list ECF
+  signs: [mouth_blisters, excessive_salivation, lameness, fever]
+  expect:
+    foot_and_mouth_disease: {band: likely, rank: 1}
+    east_coast_fever: {band: absent}

@@ -83,6 +83,8 @@ def load_kb(base=BASE):
         la = d.get("likely_at", 0.45)
         if not isinstance(la, (int, float)) or not (0.25 < la <= 1):
             raise KBError(f"{where}: likely_at must be a number above 0.25 and at most 1 (got {la!r})")
+        if not isinstance(d.get("possible_needs_key", False), bool):
+            raise KBError(f"{where}: possible_needs_key must be true or false")
         for s_ in d.get("solo_signs", []):
             if s_ not in d["signs"]:
                 raise KBError(f"{where}: solo_signs entry '{s_}' must also be listed under signs")
@@ -108,7 +110,7 @@ def rank(kb, observed):
         key_hit = any(w[s] == 3 for s in hits)
         if frac >= d.get("likely_at", 0.45) and key_hit:
             band = "likely"
-        elif frac >= 0.25 or solo:
+        elif (frac >= 0.25 and (key_hit or not d.get("possible_needs_key", False))) or solo:
             band = "possible"
         else:
             continue

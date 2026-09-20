@@ -5,16 +5,24 @@ detection: symptoms        # image | symptoms | symptoms+image | lab_only
 zoonotic: false
 urgency: urgent            # routine | soon | urgent | emergency
 min_signs: 2               # need at least this many matching signs to be listed
+likely_at: 0.35            # fever + swollen nodes + ticks (7/18 = 0.39) is enough to call it LIKELY
+# possible_needs_key is left off on purpose: the key sign (swollen lymph nodes) has to be felt for,
+# so a fever + breathing case with no nodes reported is still listed as POSSIBLE and the app then
+# asks "Are the lymph nodes swollen?" under Check next.
 summary: >
-  Tick-borne disease that is often fatal in untreated cattle within 2-3 weeks.
-  Typical picture: high fever, then swollen lymph nodes, then breathing trouble.
+  Tick-borne disease that is often fatal in untreated cattle. Typical picture: high fever,
+  then swollen lymph nodes (in front of the shoulder or below the ear), then breathing trouble
+  and wasting. The sick phase usually lasts 2-3 weeks, but some animals die within a week.
 signs:                     # weight 3 = characteristic, 2 = common, 1 = supportive
   enlarged_lymph_nodes: 3
   fever: 2
-  ticks_present: 2
+  ticks_present: 2         # exposure rather than illness, but the disease cannot happen without ticks
   laboured_breathing: 2
-  frothy_nasal_discharge: 2
+  frothy_nasal_discharge: 2   # late sign (fluid on the lungs)
+  coughing: 1
+  nasal_discharge: 1
   loss_of_appetite: 1
+  reduced_milk_yield: 1
   rapid_weight_loss: 1
   watery_eyes: 1
   diarrhoea: 1
@@ -23,6 +31,7 @@ differentials:
   - Babesiosis
   - Other theileriosis
   - Trypanosomiasis
+  - Heartwater
   - Contagious bovine pleuropneumonia (if breathing signs dominate)
 confirm_with: "Lymph node biopsy smear (looking for schizonts) or blood smear, read by a vet or lab."
 advice:
