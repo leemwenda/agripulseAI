@@ -1,0 +1,61 @@
+# Expectations for foot-and-mouth disease (FMD). Written from the standard cattle picture (CFSPH pocket
+# guide, Queensland DAF, FAO). FMD is an emergency and notifiable, so the tests lean towards flagging
+# the textbook pictures, but a herd-wide fever with no lesions must NOT be called FMD.
+# A vet should review these: the expectations ARE the clinical judgement of the system.
+
+- name: classic case - mouth blisters, drooling, foot lesions, fever
+  signs: [mouth_blisters, excessive_salivation, hoof_lesions, fever]
+  expect:
+    foot_and_mouth_disease: {band: likely, rank: 1}
+
+- name: blisters in the mouth AND on the feet is the textbook picture
+  signs: [mouth_blisters, hoof_lesions]
+  expect:
+    foot_and_mouth_disease: {band: likely, rank: 1}
+
+- name: drooling, lameness, several animals affected
+  signs: [excessive_salivation, lameness, multiple_animals_affected]
+  expect:
+    foot_and_mouth_disease: {band: likely, rank: 1}
+
+- name: early case - mouth blisters and fever only
+  signs: [mouth_blisters, fever]
+  expect:
+    foot_and_mouth_disease: {band: possible}
+
+- name: foot lesions and lameness only - could be foot rot, so possible but never likely
+  signs: [hoof_lesions, lameness]
+  expect:
+    foot_and_mouth_disease: {band: possible}
+
+- name: herd-wide fever and poor appetite with no lesions is NOT FMD
+  signs: [fever, multiple_animals_affected, loss_of_appetite]
+  expect:
+    foot_and_mouth_disease: {band: absent}
+
+- name: fever + lameness alone is NOT listed (many causes)
+  signs: [fever, lameness]
+  expect:
+    foot_and_mouth_disease: {band: absent}
+
+- name: sore teats + fever + milk drop is more likely mastitis or pseudocowpox than FMD
+  signs: [teat_lesions, fever, reduced_milk_yield]
+  expect:
+    foot_and_mouth_disease: {band: absent}
+
+- name: one sign only (mouth blisters) is never listed
+  signs: [mouth_blisters]
+  expect:
+    foot_and_mouth_disease: {band: absent}
+
+- name: lumpy skin picture must not list FMD
+  signs: [skin_nodules, fever, enlarged_lymph_nodes, reduced_milk_yield, loss_of_appetite]
+  expect:
+    lumpy_skin_disease: {band: likely, rank: 1}
+    foot_and_mouth_disease: {band: absent}
+
+- name: East Coast fever picture must not list FMD
+  signs: [fever, enlarged_lymph_nodes, ticks_present, laboured_breathing, nasal_discharge]
+  expect:
+    east_coast_fever: {band: likely, rank: 1}
+    foot_and_mouth_disease: {band: absent}
