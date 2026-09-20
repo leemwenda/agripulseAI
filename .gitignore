@@ -30,3 +30,5 @@ __pycache__/
 disease-detection/data/
 disease-detection/models/*.pt
 disease-detection/models/*.pth
+disease-detection/captures/
+disease-detection/.gradio/
