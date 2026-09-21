@@ -4,25 +4,26 @@ model_version: "cattle-health-v3"
 image_size: 224
 batch_size: 16
 epochs: 30
-patience: 5           # early stopping: stop if val_acc doesn't improve for N epochs
+patience: 5           # early stopping patience (train_v5.py watches validation LOSS, not accuracy)
 learning_rate: 0.0001
-uncertain_margin: 0.15  # if top-2 class probabilities are within this margin, predict.py returns "uncertain"
+uncertain_margin: 0.15  # if top-2 class probabilities are within this margin, the app says "uncertain"
 
 # Data locations
 data:
-  raw_dir: data/raw/cattle_health_v1       # each class is one subfolder under here
+  # Cow-cropped copies made by crop_cows.py (see the steps at the bottom of this file).
+  # To go back to the uncropped download, use raw_dir: data/raw/cattle_health_v1 and cropped: false.
+  raw_dir: data/cropped/cattle_health_v1   # each class is one subfolder under here
+  cropped: true                            # tells train_v5.py to mark the checkpoint "trained on cow crops"
+  farm_dir: data/cropped/farm              # OPTIONAL: your own photos, <farm_dir>/<class name>/<one folder per animal>/*.jpg
+  farm_split: [0.5, 0.25, 0.25]            # train / val / test for the farm photos
+  near_dup_dist: 6                         # images this similar (of 64 hash bits) always stay in the same split
   processed_dir: data/processed
-  split: [0.7, 0.15, 0.15]                 # train / val / test
+  split: [0.7, 0.15, 0.15]                 # train / val / test for the download
   seed: 42
 
 # ---- THE ONLY PART YOU EDIT TO ADD A NEW DISEASE ----
 # `name`  -> the label the model will output
-# `dir`   -> the subfolder name under data/raw/cattle_health_v1/ holding that class's images
-#
-# To add a disease:
-#   1. Put its labeled images in data/raw/cattle_health_v1/<some_folder_name>/
-#   2. Add a new "- name: ... / dir: ..." block below
-#   3. Rerun the pipeline (prepare_dataset.py -> train_baseline.py -> evaluate.py)
+# `dir`   -> the subfolder name under raw_dir holding that class's images
 #
 # foot_and_mouth_disease is DISABLED - the Kaggle source dataset didn't
 # generalize to real farm photos (confirmed 97%-confidence false positive
@@ -37,3 +38,11 @@ classes:
   #   dir: fmd_cows
   # - name: mange
   #   dir: mange_cows
+
+# Steps (from disease-detection/):
+#   python3 crop_cows.py --src data/raw/cattle_health_v1 --dst data/cropped/cattle_health_v1
+#   python3 crop_cows.py --src data/farm --dst data/cropped/farm          # only if you have farm photos
+#   python3 src/preprocessing/prepare_dataset.py
+#   python3 check_leakage.py                                             # expect 0 near-duplicates
+#   python3 train_v5.py
+#   python3 eval_folder.py --checkpoint models/cattle_health_v5.pt --data_dir data/realworld_eval

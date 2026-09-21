@@ -32,36 +32,18 @@ from collections import deque
 from pathlib import Path
 
 import gradio as gr
-from PIL import Image, ImageFile, ImageOps
 
-try:                                    # optional: lets iPhone HEIC photos open (pip install pillow-heif)
-    import pillow_heif
-    pillow_heif.register_heif_opener()
-except Exception:
-    pass
-ImageFile.LOAD_TRUNCATED_IMAGES = True
-Image.MAX_IMAGE_PIXELS = 300_000_000
-
-BUILD = "2026-09-21-any-image"   # shown in the page header and console: tells you which version is really running
+BUILD = "2026-09-21-auto-photo"   # shown in the page header and console: tells you which version is really running
 
 HERE = Path(__file__).parent
 CAPTURES_DIR = HERE.parent / "captures"        # shared with the disease app: real photos to sort later
 
 DISEASE_CONFIDENCE_FLOOR = 0.80   # same rule as the disease app
-NO_COW_MIN_PROB = 0.90            # if the detector sees no cow, the model must be this sure to name a disease
-# What to show under the result when a photo finds a disease:
-#   "collapsed" -> a closed "More details and what to do" bar you can open (default)
-#   "hidden"    -> nothing below the result at all
-#   "open"      -> the full details already expanded
-DETAILS_MODE = "collapsed"
 LIVE_REFRESH_SECONDS = 2.0        # never run live inference more often than this
 LIVE_SMOOTHING_WINDOW = 3         # average this many recent frames before showing a live verdict
 
 UNCERTAIN_MSG = "Uncertain - move closer / improve lighting and try again."
 NO_COW_MSG = "No cow detected - point the camera at cattle."
-NO_COW_UNCLEAR_MSG = ("No cow clearly found in this photo, so it cannot be judged. Retake it with the whole "
-                      "animal in view and good light.")
-NO_COW_CAUTION = " (No cow was clearly found in this photo - treat this with caution.)"
 NO_SIGNS_HINT = ("Nothing to rank from the photo alone. Open **Add symptoms you can see** and tick what you "
                  "observe, then press **Update result**.")
 
@@ -112,9 +94,8 @@ def coverage_text(vocab, diseases):
 
 
 # ---------------------------------------------------------------- verdict logic (mirrors the disease app)
-def verdict(probs, margin, classes, cow_found=True):
+def verdict(probs, margin, classes):
     """-> (kind, top_label): kind is 'uncertain', 'healthy' or 'disease'."""
-    floor = DISEASE_CONFIDENCE_FLOOR if cow_found else NO_COW_MIN_PROB
     ranked = sorted(probs.items(), key=lambda kv: kv[1], reverse=True)
     top, top_p = ranked[0]
     second = ranked[1][1] if len(ranked) > 1 else 0.0
@@ -122,7 +103,7 @@ def verdict(probs, margin, classes, cow_found=True):
         return "uncertain", top
     if top == "healthy":
         return "healthy", top
-    if top_p >= floor:
+    if top_p >= DISEASE_CONFIDENCE_FLOOR:
         return "disease", top
     return "uncertain", top
 
@@ -184,16 +165,6 @@ def triage_markdown(photo_signs, manual_signs):
     return prefix + render(results)
 
 
-# ---------------------------------------------------------------- reading any image
-def normalize_image(img):
-    """Any photo -> upright RGB (EXIF rotation applied, alpha/palette/CMYK/grayscale handled)."""
-    img = ImageOps.exif_transpose(img)
-    try:
-        return img.convert("RGB")
-    except Exception:
-        return img.convert("L").convert("RGB")
-
-
 # ---------------------------------------------------------------- captures
 def save_capture(img, label):
     """Keep analysed photos (label in the filename) so real-world photos can be sorted into a test set."""
@@ -208,43 +179,31 @@ def save_capture(img, label):
 
 
 # ---------------------------------------------------------------- Snapshot tab (automatic on photo)
-def details_update(visible, open_=False):
-    return gr.update(visible=visible, open=open_)
-
-
 def on_photo(img, manual):
-    """Runs by itself whenever a photo is added, replaced or cleared. Reads ANY photo: if no cow is
-    found it still analyses it, but needs the model to be more sure before naming a disease."""
+    """Runs by itself whenever a photo is added, replaced or cleared."""
     if img is None:
-        return "", [], "", details_update(False)
+        return "", [], ""
     try:
-        img = normalize_image(img)
-        res = get_vision().analyze(img, fast=False, require_cow=False)
+        res = get_vision().analyze(img, fast=False)
     except Exception as exc:
         return (f"Photo analysis is not available right now ({exc}). You can still use the symptom panel below.",
-                [], "", details_update(False))
-    cow_found = res.get("cow_found", True)
-    print(f"[snapshot] cow found: {cow_found}  raw probabilities: {res['probs']}")   # developer-only, console
-    kind, top = verdict(res["probs"], res["margin"], res["classes"], cow_found)
-    if not cow_found and kind != "disease":
-        headline, kind = NO_COW_UNCLEAR_MSG, "nocow_unclear"
-    else:
-        headline = headline_for(kind, top, res["classes"]) + ("" if cow_found else NO_COW_CAUTION)
+                [], triage_markdown([], manual))
+    if res["status"] == "no_cow":
+        save_capture(img, "no_cow")
+        return NO_COW_MSG, [], triage_markdown([], manual)
+    print(f"[snapshot] raw probabilities: {res['probs']}")            # developer-only, console
+    kind, top = verdict(res["probs"], res["margin"], res["classes"])
     save_capture(img, f"{kind}_{top}")
     try:
         sign_map = photo_sign_map(engine.load_kb(HERE)[0])
     except engine.KBError as exc:
-        return f"Knowledge base problem: {exc}", [], "", details_update(False)
+        return f"Knowledge base problem: {exc}", [], ""
     signs = photo_signs_for(kind, top, sign_map)
-    manual = list(manual or [])
-    has_content = bool(signs or manual)
-    show = has_content and (DETAILS_MODE != "hidden" or bool(manual))
-    md = triage_markdown(signs, manual) if show else ""
-    return headline, signs, md, details_update(show, DETAILS_MODE == "open")
+    return headline_for(kind, top, res["classes"]), signs, triage_markdown(signs, manual)
 
 
 def on_refine(photo_signs, manual):
-    return triage_markdown(photo_signs, manual), details_update(True, True)
+    return triage_markdown(photo_signs, manual)
 
 
 # ---------------------------------------------------------------- Live tab (automatic, throttled + smoothed)
@@ -262,7 +221,7 @@ def diagnose_live(img, live_enabled):
         return gr.update(), gr.update()          # not time yet
     _last_live_run = now
     try:
-        res = get_vision().analyze(normalize_image(img), fast=True)
+        res = get_vision().analyze(img, fast=True)
     except Exception as exc:
         return f"Photo analysis is not available right now ({exc}).", ""
     if res["status"] == "no_cow":
@@ -306,18 +265,16 @@ with gr.Blocks(title="AgriPulse - Cattle Detection") as demo:
         gr.Markdown("Add or take a photo - the result appears automatically.")
         snap_image = gr.Image(label="Photo", type="pil", sources=["upload", "webcam"])
         snap_headline = gr.Textbox(label="Result", interactive=False)
-        with gr.Accordion("More details and what to do", open=False, visible=False) as details_acc:
-            snap_triage = gr.Markdown()
         with gr.Accordion("Add symptoms you can see (optional)", open=False):
             manual_signs = gr.CheckboxGroup(choices=sign_choices(_vocab), label="Signs observed")
             with gr.Row():
                 refine_btn = gr.Button("Update result", variant="primary")
                 reload_btn = gr.Button("Reload knowledge base")
+        snap_triage = gr.Markdown()
 
         snap_image.change(on_photo, inputs=[snap_image, manual_signs],
-                          outputs=[snap_headline, photo_signs, snap_triage, details_acc], api_name="snapshot")
-        refine_btn.click(on_refine, inputs=[photo_signs, manual_signs],
-                         outputs=[snap_triage, details_acc], api_name="refine")
+                          outputs=[snap_headline, photo_signs, snap_triage], api_name="snapshot")
+        refine_btn.click(on_refine, inputs=[photo_signs, manual_signs], outputs=[snap_triage], api_name="refine")
         reload_btn.click(reload_kb, outputs=[manual_signs, coverage])
 
     with gr.Tab("Live Monitoring"):

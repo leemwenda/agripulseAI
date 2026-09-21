@@ -7,6 +7,7 @@ notifiable: true
 urgency: urgent            # routine | soon | urgent | emergency
 min_signs: 2
 solo_signs: [skin_nodules] # firm skin nodules alone (e.g. seen in a photo) are enough to flag it
+possible_needs_key: true   # without skin nodules, fever/nodes/ticks alone are not listed as LSD
 summary: >
   Viral disease that causes firm, raised skin nodules over the body, fever, swollen
   lymph nodes and a drop in milk yield. Spreads quickly through insects.

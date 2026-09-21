@@ -23,7 +23,6 @@ from pathlib import Path
 
 import torch
 import torch.nn as nn
-from PIL import Image, ImageFile, ImageOps
 from torchvision import models, transforms
 from torchvision.models.detection import (
     FasterRCNN_ResNet50_FPN_Weights,
@@ -36,9 +35,6 @@ CHECKPOINT_PATH = Path(__file__).resolve().parent.parent / "models" / "cattle_he
 COCO_COW_CLASS_INDEX = 21          # "cow" in torchvision's 91-class COCO list
 COW_SCORE_THRESHOLD = 0.4
 MAX_SIDE = 1024                    # downscale big phone photos: much faster on CPU
-
-ImageFile.LOAD_TRUNCATED_IMAGES = True   # half-uploaded / truncated photos still open
-Image.MAX_IMAGE_PIXELS = 300_000_000     # very high-megapixel phone photos are fine
 
 _cache = {}
 
@@ -90,30 +86,10 @@ def has_cow(pil_img, fast=False):
     )
 
 
-def to_rgb(pil_img):
-    """Any PIL image -> upright RGB. Phone photos are often stored sideways with an EXIF
-    rotation tag; PNG/WebP may carry alpha; some are grayscale, palette or CMYK."""
-    img = ImageOps.exif_transpose(pil_img)   # no-op if already upright / no tag
-    try:
-        return img.convert("RGB")
-    except Exception:
-        return img.convert("L").convert("RGB")
-
-
-def analyze(pil_img, fast=False, require_cow=True):
-    """require_cow=True  -> stop with {"status": "no_cow"} when no cow is detected (live camera).
-       require_cow=False -> classify ANY photo anyway and report "cow_found" so the caller can
-                            be more careful when the detector did not see a cow (single photos)."""
-    img = to_rgb(pil_img)
+def analyze(pil_img, fast=False):
+    img = pil_img.convert("RGB")
     img.thumbnail((MAX_SIDE, MAX_SIDE))
-    try:
-        cow_found = has_cow(img, fast=fast)
-    except Exception as exc:
-        if require_cow:
-            raise
-        print(f"[vision] cow detector unavailable ({exc}); continuing without it")
-        cow_found = False
-    if not cow_found and require_cow:
+    if not has_cow(img, fast=fast):
         return {"status": "no_cow"}
     model, classes, margin, tf, version, dev = _classifier()
     with torch.no_grad():
@@ -124,7 +100,6 @@ def analyze(pil_img, fast=False, require_cow=True):
     second = ranked[1][1] if len(ranked) > 1 else 0.0
     return {
         "status": "ok",
-        "cow_found": cow_found,
         "probs": prob_dict,
         "classes": classes,
         "margin": margin,

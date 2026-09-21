@@ -1,16 +1,18 @@
 id: foot_and_mouth_disease
 name: Foot-and-mouth disease
 pathogen: "Foot-and-mouth disease virus (Aphthovirus; several serotypes)"
-detection: symptoms+image   # symptoms now; an image model would need mouth/hoof CLOSE-UPS, not whole-body photos
+detection: symptoms         # no photo model: it would need mouth/hoof CLOSE-UPS, and whole-body photos cannot show FMD
 zoonotic: false
 notifiable: true            # suspected cases must be reported to the veterinary authority
 urgency: emergency          # routine | soon | urgent | emergency
 min_signs: 2
-likely_at: 0.35             # many signs share the weight, so a lower bar than the 0.45 default
+likely_at: 0.30             # many signs share the weight, so a lower bar than the 0.45 default: blisters in the mouth AND on the feet (6/20) count as LIKELY
+possible_needs_key: true    # the characteristic signs are all visible, so fever/lameness/herd spread alone are not listed as FMD
 summary: >
   Highly contagious viral disease. Typical picture: fever, blisters and raw sores in the
   mouth and between the claws, drooling and lameness, spreading quickly through the herd.
   Rarely kills adult cattle but causes major losses (milk, growth) and trade restrictions.
+  Young calves can die suddenly without showing signs.
 signs:                      # weight 3 = characteristic, 2 = common, 1 = supportive
   mouth_blisters: 3
   excessive_salivation: 3
@@ -21,6 +23,7 @@ signs:                      # weight 3 = characteristic, 2 = common, 1 = support
   multiple_animals_affected: 2
   loss_of_appetite: 1
   reduced_milk_yield: 1
+  nasal_discharge: 1
 differentials:
   - Lumpy skin disease
   - Bovine viral diarrhoea / mucosal disease
