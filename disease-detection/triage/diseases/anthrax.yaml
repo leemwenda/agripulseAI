@@ -1,0 +1,29 @@
+id: anthrax
+name: Anthrax
+pathogen: "Bacillus anthracis"
+detection: symptoms
+zoonotic: true
+notifiable: true
+urgency: emergency
+min_signs: 1
+solo_signs: [sudden_death]
+summary: >
+  Often kills cattle within hours with little warning. Typical picture: sudden death,
+  sometimes with unclotted blood from body openings and rapid bloating of the carcass.
+  Extremely dangerous to people - never open or skin the carcass.
+signs:
+  sudden_death: 3
+  bleeding_from_orifices: 3
+  staggering_or_trembling: 2
+  fever: 2
+  multiple_animals_affected: 1
+differentials:
+  - Blackleg
+  - Lightning strike or other sudden trauma
+  - Bloat or other acute poisoning
+confirm_with: "Do NOT open the carcass. The veterinary authority takes blood smear/swab samples safely and tests for the bacteria."
+advice:
+  - "Do not touch, open, skin or move the carcass - anthrax spreads to people through contact with blood and tissue."
+  - "Call your vet and the county veterinary officer immediately."
+  - "Keep people and other animals away from the carcass and the site until officials say it is safe."
+  - "Burn or deep-bury the carcass only under veterinary/official guidance, on the same site."

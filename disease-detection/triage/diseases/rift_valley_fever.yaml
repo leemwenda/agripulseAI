@@ -1,0 +1,30 @@
+id: rift_valley_fever
+name: Rift Valley fever
+pathogen: "Rift Valley fever virus (Phlebovirus), spread by mosquitoes and by contact with infected tissue/fluids"
+detection: symptoms
+zoonotic: true
+notifiable: true
+urgency: emergency
+min_signs: 1
+solo_signs: [abortion_storm]
+summary: >
+  Viral disease with major outbreaks after heavy rains and mosquito activity. Typical
+  picture: a wave of abortions across several pregnant animals, high deaths in young
+  calves, and fever, sometimes with jaundice or bloody diarrhoea in adults. Serious
+  risk to people handling sick animals, carcasses or birth material.
+signs:
+  abortion_storm: 3
+  fever: 2
+  bloody_diarrhoea: 2
+  pale_or_yellow_gums: 1
+  multiple_animals_affected: 1
+differentials:
+  - Brucellosis (single/sporadic abortions, not a storm)
+  - Bovine viral diarrhoea
+  - Other causes of an abortion outbreak
+confirm_with: "Report to the veterinary authority; confirmed by serology or PCR through official channels."
+advice:
+  - "Report suspected cases immediately to your vet and the county veterinary officer - this is a reportable, zoonotic disease."
+  - "Wear gloves and avoid bare-hand contact with aborted material, birth fluids or dead animals."
+  - "Avoid slaughtering sick animals; do not handle carcasses without official guidance."
+  - "Reduce mosquito exposure where practical (avoid grazing near stagnant water at dusk/dawn)."

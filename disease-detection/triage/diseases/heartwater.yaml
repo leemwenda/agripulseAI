@@ -1,0 +1,28 @@
+id: heartwater
+name: Heartwater (cowdriosis)
+pathogen: "Ehrlichia (Cowdria) ruminantium, spread by the bont tick (Amblyomma species)"
+detection: symptoms
+zoonotic: false
+urgency: emergency
+min_signs: 2
+summary: >
+  Tick-borne disease that can affect the brain. Typical picture: high fever followed
+  by nervous signs - circling, high-stepping gait, twitching or convulsions - which
+  is the feature that most distinguishes it from other tick-borne fevers.
+signs:
+  nervous_signs_or_convulsions: 3
+  fever: 2
+  ticks_present: 2
+  laboured_breathing: 1
+  loss_of_appetite: 1
+differentials:
+  - East Coast fever
+  - Rabies (if nervous signs dominate and progress)
+  - Lead or other poisoning
+  - Meningitis
+confirm_with: "Brain smear (post-mortem) or blood/tissue PCR, arranged by a vet."
+advice:
+  - "Call a vet immediately - nervous signs need urgent treatment and careful handling."
+  - "Keep the animal in a safe, quiet, shaded space; it may be unsteady or prone to sudden collapse."
+  - "Control bont ticks on the whole herd."
+  - "Ask about tick-control programmes and, where available, heartwater immunisation for the herd."

@@ -1,0 +1,28 @@
+id: johnes_disease
+name: "Johne's disease (paratuberculosis)"
+pathogen: "Mycobacterium avium subsp. paratuberculosis"
+detection: symptoms
+zoonotic: false
+urgency: routine
+min_signs: 2
+summary: >
+  Slow, chronic gut infection, usually showing up in adult cattle years after infection
+  as a calf. Typical picture: persistent watery diarrhoea without blood and steady
+  weight loss over weeks to months, despite a normal or good appetite. Advanced cases
+  can develop soft swelling under the jaw (bottle jaw).
+signs:
+  chronic_weight_loss: 3
+  diarrhoea: 2
+  bottle_jaw_swelling: 1
+  reduced_milk_yield: 1
+differentials:
+  - Bovine tuberculosis (usually a chronic cough, less diarrhoea)
+  - Internal parasites
+  - Poor nutrition
+  - Salmonellosis (usually more acute, sicker animal)
+confirm_with: "Faecal PCR/culture or blood antibody test (ELISA), through a vet - a single test can miss early cases."
+advice:
+  - "There is no cure; ask your vet about managing the animal and reducing spread to calves (it passes mainly through manure and milk)."
+  - "Separate calves from adult manure and colostrum/milk from confirmed or suspected cows where possible."
+  - "Cull-and-test strategies are usually managed at herd level - ask your vet about a herd screening plan."
+  - "Keep feed and water troughs free of manure contamination."

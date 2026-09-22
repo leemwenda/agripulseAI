@@ -1,0 +1,30 @@
+id: brucellosis
+name: Brucellosis
+pathogen: "Brucella abortus (mainly)"
+detection: symptoms
+zoonotic: true
+notifiable: true
+urgency: soon
+min_signs: 1
+solo_signs: [abortion]
+summary: >
+  Bacterial disease best known for causing abortion in the last third of pregnancy,
+  retained placenta and reduced fertility. Many infected cattle show no other signs.
+  Spreads to people through contact with birth fluids or unpasteurised milk.
+signs:
+  abortion: 3
+  retained_placenta: 2
+  swollen_joints: 2
+  repeat_breeding_failure: 2
+  reduced_milk_yield: 1
+differentials:
+  - Rift Valley fever (if abortion storm across several animals)
+  - Bovine viral diarrhoea
+  - Trichomoniasis / other causes of infertility
+  - Nutritional or other non-infectious abortion causes
+confirm_with: "Blood test (serology, e.g. RBPT/ELISA) through a vet or veterinary lab. Handle aborted material and afterbirth with gloves."
+advice:
+  - "Wear gloves when handling afterbirth, aborted calves or birth fluids, and avoid raw milk from this animal."
+  - "Isolate the animal after abortion and keep other pregnant cows away from the birth site and discharge."
+  - "Ask your vet about herd testing - infected animals usually need to be identified and managed under veterinary guidance."
+  - "Boil or pasteurise milk before drinking, from this animal and, until tested, the rest of the herd."

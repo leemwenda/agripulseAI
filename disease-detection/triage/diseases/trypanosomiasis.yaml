@@ -1,0 +1,29 @@
+id: trypanosomiasis
+name: Trypanosomiasis (nagana)
+pathogen: "Trypanosoma species, spread mainly by tsetse flies"
+detection: symptoms
+zoonotic: false
+urgency: urgent
+min_signs: 2
+summary: >
+  Parasitic blood disease spread by tsetse flies. Typical picture: recurring fever,
+  pale gums (anaemia), progressive weight loss and swollen lymph nodes over weeks,
+  in an area with tsetse flies.
+signs:
+  tsetse_flies_present: 3
+  pale_or_yellow_gums: 2
+  fever: 2
+  rapid_weight_loss: 2
+  enlarged_lymph_nodes: 1
+  loss_of_appetite: 1
+differentials:
+  - Anaplasmosis
+  - Babesiosis
+  - Theileriosis / East Coast fever
+  - Chronic internal parasites
+confirm_with: "Blood smear examination or PCR, read by a vet or lab."
+advice:
+  - "Call a vet - specific trypanocidal drugs are needed and work best started early."
+  - "Control tsetse flies where possible (traps, targets, clearing thick bush near grazing areas)."
+  - "Avoid grazing in known tsetse-infested areas during peak fly activity."
+  - "Support the animal with good feeding while it recovers - anaemia takes time to resolve."

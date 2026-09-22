@@ -1,0 +1,27 @@
+id: theileriosis
+name: Theileriosis (other than East Coast fever)
+pathogen: "Theileria mutans, Theileria taurotragi and other Theileria species, spread by ticks"
+detection: symptoms
+zoonotic: false
+urgency: soon
+min_signs: 2
+summary: >
+  A group of tick-borne diseases related to East Coast fever but usually milder.
+  Typical picture: fever, swollen lymph nodes and pale gums, with fewer animals dying
+  than in East Coast fever.
+signs:
+  enlarged_lymph_nodes: 3
+  fever: 2
+  ticks_present: 2
+  pale_or_yellow_gums: 1
+  rapid_weight_loss: 1
+  laboured_breathing: 1
+differentials:
+  - East Coast fever (usually more severe, faster breathing decline)
+  - Anaplasmosis
+  - Babesiosis
+confirm_with: "Blood smear or lymph node smear read by a vet or lab, to identify the Theileria species and rule out East Coast fever."
+advice:
+  - "Have a vet check the animal, mainly to rule out the more dangerous East Coast fever."
+  - "Isolate the animal and control ticks on the herd."
+  - "Monitor temperature and breathing daily; worsening breathing needs urgent vet review."

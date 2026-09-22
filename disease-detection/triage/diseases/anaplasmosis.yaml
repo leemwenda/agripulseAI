@@ -1,0 +1,29 @@
+id: anaplasmosis
+name: Anaplasmosis
+pathogen: "Anaplasma marginale, spread mainly by ticks (also biting flies, contaminated needles)"
+detection: symptoms
+zoonotic: false
+urgency: urgent
+min_signs: 2
+summary: >
+  Tick-borne disease that destroys red blood cells. Typical picture: fever, pale gums
+  (anaemia, usually without dark urine), weight loss and sometimes aggressive or
+  nervous behaviour from low oxygen to the brain.
+signs:
+  pale_or_yellow_gums: 3
+  fever: 2
+  ticks_present: 2
+  rapid_weight_loss: 1
+  aggressive_or_nervous_behaviour: 1
+  laboured_breathing: 1
+  reduced_milk_yield: 1
+differentials:
+  - Babesiosis (usually with dark urine)
+  - East Coast fever / other theileriosis
+  - Trypanosomiasis
+confirm_with: "Blood smear examination or PCR, read by a vet or lab."
+advice:
+  - "Call a vet - treatment (usually tetracycline antibiotics) works best started early."
+  - "Avoid stressing or moving the animal; severe anaemia can make exertion dangerous."
+  - "Control ticks and biting flies on the whole herd, and disinfect needles/instruments between animals."
+  - "Isolate visibly sick animals where practical."

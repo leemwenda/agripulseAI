@@ -1,0 +1,30 @@
+id: bovine_viral_diarrhoea
+name: Bovine viral diarrhoea (BVD)
+pathogen: "Bovine viral diarrhoea virus (Pestivirus)"
+detection: symptoms
+zoonotic: false
+urgency: soon
+min_signs: 2
+summary: >
+  Viral disease with a wide range of pictures. Typical signs in an outbreak: fever,
+  diarrhoea, mouth erosions/nasal discharge, a drop in milk yield, and reproductive
+  problems - abortion or calves born weak, small or deformed - in pregnant animals.
+signs:
+  diarrhoea: 2
+  mouth_blisters: 3
+  fever: 1
+  nasal_discharge: 1
+  reduced_milk_yield: 1
+  abortion: 1
+  weak_or_deformed_calves: 1
+differentials:
+  - Foot-and-mouth disease (usually more severe blisters, more lameness)
+  - Malignant catarrhal fever
+  - Salmonellosis
+  - Brucellosis (if abortion is the main sign)
+confirm_with: "Blood or ear-notch PCR/antigen testing, through a vet, to identify persistently-infected animals."
+advice:
+  - "Have a vet examine the herd, especially if several animals are affected or pregnant cows are aborting."
+  - "Ask about testing for persistently-infected (PI) animals - these calves look normal but continuously spread the virus and are usually removed from the herd."
+  - "Isolate new or returning animals before mixing them with the main herd."
+  - "Ask your vet about vaccination, particularly for breeding females."

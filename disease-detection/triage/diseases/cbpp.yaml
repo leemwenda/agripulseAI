@@ -1,0 +1,32 @@
+id: cbpp
+name: Contagious bovine pleuropneumonia (CBPP)
+pathogen: "Mycoplasma mycoides subsp. mycoides"
+detection: symptoms
+zoonotic: false
+notifiable: true
+urgency: emergency
+min_signs: 2
+summary: >
+  Highly contagious lung disease. Typical picture: fever, laboured/painful breathing
+  (grunting, reluctance to move), coughing and a drop in milk yield, spreading through
+  the herd over days to weeks.
+signs:
+  grunting_or_painful_breathing: 3
+  laboured_breathing: 2
+  coughing: 2
+  fever: 2
+  multiple_animals_affected: 2
+  loss_of_appetite: 1
+  reduced_milk_yield: 1
+  nasal_discharge: 1
+differentials:
+  - East Coast fever (if breathing signs dominate)
+  - Heartwater
+  - Other pneumonia (bacterial/viral)
+  - Bovine tuberculosis (chronic cases)
+confirm_with: "Reported to the veterinary authority; confirmed by post-mortem lung lesions, serology (CFT) or PCR through official channels."
+advice:
+  - "Report the suspicion to your vet and the county veterinary officer immediately - this is a reportable disease."
+  - "Isolate affected animals and restrict all cattle movement on and off the farm."
+  - "Do not slaughter or sell affected or in-contact animals until the veterinary authority has assessed the herd."
+  - "Ask about vaccination for the rest of the herd where the disease is known to occur."

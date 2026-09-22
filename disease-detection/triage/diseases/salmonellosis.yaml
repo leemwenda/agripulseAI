@@ -1,0 +1,29 @@
+id: salmonellosis
+name: Salmonellosis
+pathogen: "Salmonella species (bacteria)"
+detection: symptoms
+zoonotic: true
+urgency: urgent
+min_signs: 2
+summary: >
+  Bacterial gut infection that can spread quickly through a group, especially calves
+  and stressed or newly-mixed cattle. Typical picture: fever, profuse watery or bloody
+  diarrhoea, dehydration and loss of appetite; pregnant cows may abort.
+signs:
+  bloody_diarrhoea: 3
+  fever: 2
+  dehydration_sunken_eyes: 2
+  loss_of_appetite: 1
+  multiple_animals_affected: 1
+  abortion: 1
+differentials:
+  - Bovine viral diarrhoea
+  - Coccidiosis (mainly young calves)
+  - Johne's disease (chronic, usually not bloody)
+  - Other causes of acute diarrhoea/poisoning
+confirm_with: "Faecal culture or PCR, through a vet or lab."
+advice:
+  - "Call a vet - dehydration in acute diarrhoea can kill quickly and often needs fluids alongside any antibiotic treatment."
+  - "Isolate affected animals; Salmonella spreads easily through manure and contaminated feed/water."
+  - "Wash hands well after handling sick animals or manure - this can spread to people, especially children."
+  - "Clean and disinfect feeding and watering areas used by affected animals."

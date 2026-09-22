@@ -1,0 +1,43 @@
+# Shared vocabulary of observable signs. Every disease file may only use ids listed here.
+# `ask` is the plain-language question shown to the farmer / vet officer.
+# Add new signs here as each new disease needs them.
+signs:
+  fever:
+    ask: "Is the temperature high (about 39.5 C or above)?"
+  enlarged_lymph_nodes:
+    ask: "Are the lymph nodes swollen (in front of the shoulder or below the ear)?"
+  ticks_present:
+    ask: "Are ticks present on the animal (especially on the ears), or has it been in a tick-infested area?"
+  laboured_breathing:
+    ask: "Is the animal breathing fast or with difficulty?"
+  frothy_nasal_discharge:
+    ask: "Is there frothy or foamy discharge from the nose?"
+  loss_of_appetite:
+    ask: "Has the animal stopped eating or is it eating much less?"
+  rapid_weight_loss:
+    ask: "Is the animal losing condition quickly?"
+  watery_eyes:
+    ask: "Are the eyes watering or discharging?"
+  diarrhoea:
+    ask: "Does the animal have diarrhoea?"
+  mouth_blisters:
+    ask: "Are there blisters, ulcers or raw patches on the tongue, gums or lips?"
+  excessive_salivation:
+    ask: "Is the animal drooling or producing a lot of stringy saliva (often with smacking lips)?"
+  hoof_lesions:
+    ask: "Are there blisters or raw sores between the claws or on the coronary band (top of the hoof)?"
+  lameness:
+    ask: "Is the animal lame or reluctant to walk?"
+  teat_lesions:
+    ask: "Are there blisters or sores on the teats or udder?"
+  reduced_milk_yield:
+    ask: "Has milk production dropped suddenly?"
+  multiple_animals_affected:
+    ask: "Are several animals in the herd showing the same signs, or did the signs spread quickly?"
+  skin_nodules:
+    ask: "Are there firm, raised lumps (about 2-5 cm) in the skin?"
+    from_photo_class: lumpy_skin_disease   # the photo model's class that ticks this sign
+  swollen_limbs_or_brisket:
+    ask: "Are the legs, brisket or dewlap swollen?"
+  nasal_discharge:
+    ask: "Is there discharge from the nose?"

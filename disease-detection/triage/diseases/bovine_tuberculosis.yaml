@@ -1,0 +1,29 @@
+id: bovine_tuberculosis
+name: Bovine tuberculosis
+pathogen: "Mycobacterium bovis"
+detection: symptoms
+zoonotic: true
+notifiable: true
+urgency: soon
+min_signs: 2
+summary: >
+  Slow, chronic bacterial disease. Typical picture: a persistent cough, gradual weight
+  loss over weeks to months despite normal appetite, and enlarged lymph nodes. Many
+  infected cattle look outwardly healthy for a long time. Spreads to people, mainly
+  through unpasteurised milk.
+signs:
+  chronic_cough: 3
+  chronic_weight_loss: 2
+  enlarged_lymph_nodes: 2
+  laboured_breathing: 1
+  reduced_milk_yield: 1
+differentials:
+  - Johne's disease (weight loss with normal appetite, usually no cough)
+  - Chronic pneumonia
+  - Internal parasites
+confirm_with: "Skin test (tuberculin/comparative cervical test) or lab testing arranged through the veterinary authority - this is an official testing programme, not a home test."
+advice:
+  - "Boil or pasteurise all milk from this animal before drinking or selling it."
+  - "Ask your vet about herd testing; many countries run official bovine TB testing and control programmes."
+  - "Isolate the animal from the rest of the herd, especially calves, while awaiting testing."
+  - "Tell anyone in close daily contact with the animal to mention this to a doctor if they develop a persistent cough."

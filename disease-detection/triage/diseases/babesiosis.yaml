@@ -1,0 +1,28 @@
+id: babesiosis
+name: Babesiosis
+pathogen: "Babesia bigemina / Babesia bovis, spread by ticks - known locally as redwater"
+detection: symptoms
+zoonotic: false
+urgency: urgent
+min_signs: 2
+summary: >
+  Tick-borne disease that destroys red blood cells. Typical picture: fever, pale or
+  yellowish gums, and dark red or brown urine (redwater) from broken-down blood cells.
+signs:
+  dark_urine: 3
+  fever: 2
+  ticks_present: 2
+  pale_or_yellow_gums: 2
+  rapid_weight_loss: 1
+  laboured_breathing: 1
+differentials:
+  - Anaplasmosis (usually without dark urine)
+  - East Coast fever / other theileriosis
+  - Leptospirosis
+  - Plant or chemical poisoning affecting the kidneys
+confirm_with: "Blood smear examination or PCR, read by a vet or lab; urine colour alone is supportive, not a confirmed diagnosis."
+advice:
+  - "Call a vet urgently - specific treatment works best started early, before severe anaemia sets in."
+  - "Keep the animal calm and avoid forcing it to walk or exert itself."
+  - "Control ticks on the whole herd (dips, sprays or pour-ons as advised by a vet)."
+  - "Provide clean water and shade while awaiting treatment."

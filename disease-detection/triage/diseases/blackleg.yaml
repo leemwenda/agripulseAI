@@ -1,0 +1,28 @@
+id: blackleg
+name: Blackleg
+pathogen: "Clostridium chauvoei, a soil-borne bacterium; mainly affects young, fast-growing cattle"
+detection: symptoms
+zoonotic: false
+urgency: emergency
+min_signs: 1
+solo_signs: [sudden_death, swollen_gassy_muscle]
+summary: >
+  Fast-killing bacterial disease of muscle, usually in well-fed young cattle. Typical
+  picture: sudden severe lameness or a swollen, gas-filled muscle (often a leg or the
+  back), high fever, and death within a day or two if untreated.
+signs:
+  swollen_gassy_muscle: 3
+  sudden_death: 2
+  lameness: 2
+  fever: 2
+  loss_of_appetite: 1
+differentials:
+  - Anthrax
+  - Blunt trauma or snake bite causing swelling
+  - Malignant oedema (a related clostridial infection)
+confirm_with: "Post-mortem examination and lab testing (through a vet) - the muscle lesion and history are often distinctive."
+advice:
+  - "Call a vet immediately - blackleg progresses fast and needs urgent antibiotic treatment to have a chance."
+  - "Do not open a carcass yourself if the animal has died; clostridial spores persist in soil and contaminated ground should not be disturbed casually."
+  - "Ask your vet about clostridial vaccination for the rest of the herd, especially young growing cattle."
+  - "Avoid grazing on the same ground where a previous case occurred, where possible."

@@ -1,0 +1,28 @@
+id: mastitis
+name: Mastitis
+pathogen: "Various bacteria (e.g. Staphylococcus, Streptococcus, E. coli) infecting the udder"
+detection: symptoms+image   # image would need a close-up udder photo model - not yet built
+zoonotic: false
+urgency: soon
+min_signs: 1
+solo_signs: [udder_swelling_or_heat, abnormal_milk]
+summary: >
+  Infection of the udder. Typical picture: a swollen, hot or painful quarter of the
+  udder, abnormal milk (watery, clotted or bloody) and a drop in yield. Severe cases
+  also have fever and loss of appetite.
+signs:
+  udder_swelling_or_heat: 3
+  abnormal_milk: 3
+  reduced_milk_yield: 2
+  fever: 1
+  loss_of_appetite: 1
+differentials:
+  - Udder injury or bruising
+  - Foot-and-mouth disease (if teat blisters are present)
+  - Summer mastitis (fly-borne, usually dry cows/heifers)
+confirm_with: "California mastitis test (CMT) or milk culture/somatic cell count, arranged with a vet."
+advice:
+  - "Milk the affected quarter out fully and often; discard this milk, do not sell or feed it to calves."
+  - "Call a vet - mastitis usually needs antibiotic treatment matched to the bacteria involved."
+  - "Keep the udder and bedding clean and dry; check milking equipment and technique for hygiene."
+  - "Watch closely if fever or loss of appetite develops - this can become a general (systemic) infection."

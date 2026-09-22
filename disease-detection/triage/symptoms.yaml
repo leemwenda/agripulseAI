@@ -41,3 +41,51 @@ signs:
     ask: "Are the legs, brisket or dewlap swollen?"
   nasal_discharge:
     ask: "Is there discharge from the nose?"
+  coughing:
+    ask: "Is the animal coughing?"
+  grunting_or_painful_breathing:
+    ask: "Does the animal grunt or stand with elbows out / neck stretched, as if breathing hurts?"
+  sudden_death:
+    ask: "Did the animal die suddenly, with little or no illness seen beforehand?"
+  bleeding_from_orifices:
+    ask: "Is there unclotted blood coming from the nose, mouth, anus or other body openings?"
+  staggering_or_trembling:
+    ask: "Is the animal staggering, trembling, or collapsing?"
+  abortion:
+    ask: "Has the cow aborted or given birth early?"
+  retained_placenta:
+    ask: "Did the placenta fail to come away after calving?"
+  swollen_joints:
+    ask: "Are one or more joints swollen (e.g. knee, hock)?"
+  repeat_breeding_failure:
+    ask: "Has the cow repeatedly failed to conceive or held on to the bull/AI without success?"
+  chronic_cough:
+    ask: "Has the animal had a persistent cough for weeks or months?"
+  chronic_weight_loss:
+    ask: "Has the animal been losing weight slowly over weeks or months, even while eating normally?"
+  pale_or_yellow_gums:
+    ask: "Are the gums or eye membranes pale or yellowish, instead of pink?"
+  aggressive_or_nervous_behaviour:
+    ask: "Is the animal unusually aggressive, nervous or hard to handle?"
+  dark_urine:
+    ask: "Is the urine dark red or brown (like coffee or wine)?"
+  udder_swelling_or_heat:
+    ask: "Is the udder swollen, hot, hard or painful to touch?"
+  abnormal_milk:
+    ask: "Does the milk look abnormal (watery, clotted, or with blood/pus)?"
+  swollen_gassy_muscle:
+    ask: "Is there a swollen area of muscle that crackles or feels gassy when pressed?"
+  tsetse_flies_present:
+    ask: "Are tsetse flies present, or has the animal grazed in a tsetse-infested area?"
+  nervous_signs_or_convulsions:
+    ask: "Is the animal circling, high-stepping, twitching or convulsing?"
+  abortion_storm:
+    ask: "Have several pregnant animals in the herd aborted around the same time?"
+  bloody_diarrhoea:
+    ask: "Is there blood in the diarrhoea?"
+  bottle_jaw_swelling:
+    ask: "Is there soft swelling under the jaw (bottle jaw)?"
+  dehydration_sunken_eyes:
+    ask: "Do the eyes look sunken, or does the skin stay tented when pinched (signs of dehydration)?"
+  weak_or_deformed_calves:
+    ask: "Have any calves been born weak, small or deformed?"

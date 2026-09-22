@@ -42,7 +42,7 @@ except Exception:
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 Image.MAX_IMAGE_PIXELS = 300_000_000
 
-BUILD = "2026-09-21-18-diseases"   # shown in the page header and console: tells you which version is really running
+BUILD = "2026-09-21-any-image"   # shown in the page header and console: tells you which version is really running
 
 HERE = Path(__file__).parent
 CAPTURES_DIR = HERE.parent / "captures"        # shared with the disease app: real photos to sort later
