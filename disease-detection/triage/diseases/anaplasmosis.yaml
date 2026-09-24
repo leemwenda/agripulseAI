@@ -17,6 +17,7 @@ signs:
   aggressive_or_nervous_behaviour: 1
   laboured_breathing: 1
   reduced_milk_yield: 1
+  rapid_heart_rate: 1
 differentials:
   - Babesiosis (usually with dark urine)
   - East Coast fever / other theileriosis

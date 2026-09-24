@@ -15,6 +15,7 @@ signs:
   abortion: 3
   retained_placenta: 2
   swollen_joints: 2
+  testicular_swelling: 2
   repeat_breeding_failure: 2
   reduced_milk_yield: 1
 differentials:

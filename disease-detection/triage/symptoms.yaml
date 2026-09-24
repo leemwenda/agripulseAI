@@ -89,3 +89,15 @@ signs:
     ask: "Do the eyes look sunken, or does the skin stay tented when pinched (signs of dehydration)?"
   weak_or_deformed_calves:
     ask: "Have any calves been born weak, small or deformed?"
+  head_pressing_or_teeth_grinding:
+    ask: "Is the animal grinding its teeth, pressing its head against something, or making odd chewing movements?"
+  testicular_swelling:
+    ask: "Is a bull's scrotum or testicles swollen or inflamed?"
+  rough_dull_coat:
+    ask: "Has the coat become rough, dull or unkept-looking?"
+  reluctant_to_rise:
+    ask: "Is the animal reluctant or unable to get up?"
+  isolating_from_herd:
+    ask: "Is the animal separating itself from the herd or moving noticeably less than usual?"
+  rapid_heart_rate:
+    ask: "Does the heart feel like it is beating unusually fast (felt on the chest, or a racing pulse)?"

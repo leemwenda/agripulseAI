@@ -15,6 +15,7 @@ signs:
   pale_or_yellow_gums: 2
   rapid_weight_loss: 1
   laboured_breathing: 1
+  rapid_heart_rate: 1
 differentials:
   - Anaplasmosis (usually without dark urine)
   - East Coast fever / other theileriosis

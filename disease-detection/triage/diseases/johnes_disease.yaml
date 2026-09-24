@@ -14,6 +14,7 @@ signs:
   chronic_weight_loss: 3
   diarrhoea: 2
   bottle_jaw_swelling: 1
+  rough_dull_coat: 1
   reduced_milk_yield: 1
 differentials:
   - Bovine tuberculosis (usually a chronic cough, less diarrhoea)

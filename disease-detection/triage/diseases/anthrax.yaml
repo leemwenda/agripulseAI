@@ -16,6 +16,7 @@ signs:
   bleeding_from_orifices: 3
   staggering_or_trembling: 2
   fever: 2
+  bloody_diarrhoea: 1
   multiple_animals_affected: 1
 differentials:
   - Blackleg

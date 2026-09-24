@@ -14,6 +14,7 @@ signs:
   fever: 2
   dehydration_sunken_eyes: 2
   loss_of_appetite: 1
+  rapid_heart_rate: 1
   multiple_animals_affected: 1
   abortion: 1
 differentials:

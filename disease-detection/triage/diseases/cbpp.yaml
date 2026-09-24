@@ -19,6 +19,7 @@ signs:
   loss_of_appetite: 1
   reduced_milk_yield: 1
   nasal_discharge: 1
+  isolating_from_herd: 1
 differentials:
   - East Coast fever (if breathing signs dominate)
   - Heartwater

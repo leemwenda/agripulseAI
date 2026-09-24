@@ -11,6 +11,9 @@ summary: >
   is the feature that most distinguishes it from other tick-borne fevers.
 signs:
   nervous_signs_or_convulsions: 3
+  head_pressing_or_teeth_grinding: 2
+  swollen_limbs_or_brisket: 1
+  isolating_from_herd: 1
   fever: 2
   ticks_present: 2
   laboured_breathing: 1

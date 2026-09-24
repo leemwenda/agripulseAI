@@ -17,6 +17,7 @@ signs:
   enlarged_lymph_nodes: 2
   laboured_breathing: 1
   reduced_milk_yield: 1
+  isolating_from_herd: 1
 differentials:
   - Johne's disease (weight loss with normal appetite, usually no cough)
   - Chronic pneumonia

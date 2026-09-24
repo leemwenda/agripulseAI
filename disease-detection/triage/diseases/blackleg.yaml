@@ -14,7 +14,9 @@ signs:
   swollen_gassy_muscle: 3
   sudden_death: 2
   lameness: 2
+  reluctant_to_rise: 1
   fever: 2
+  rapid_heart_rate: 1
   loss_of_appetite: 1
 differentials:
   - Anthrax

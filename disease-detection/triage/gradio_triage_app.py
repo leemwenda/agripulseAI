@@ -196,13 +196,21 @@ def normalize_image(img):
 
 # ---------------------------------------------------------------- captures
 def save_capture(img, label):
-    """Keep analysed photos (label in the filename) so real-world photos can be sorted into a test set."""
+    """Keep analysed photos (label in the filename) so real-world photos can be sorted into a test set.
+    Filenames go to the millisecond, with a numeric suffix as a last-resort tiebreaker, so two photos
+    analysed in the same second (e.g. two Live Monitoring frames) never silently overwrite each other."""
     if img is None:
         return
     try:
         CAPTURES_DIR.mkdir(exist_ok=True)
         safe = "".join(c if c.isalnum() else "_" for c in label)[:40]
-        img.convert("RGB").save(CAPTURES_DIR / f"{time.strftime('%Y%m%d-%H%M%S')}_triage_{safe}.jpg", quality=90)
+        stamp = time.strftime("%Y%m%d-%H%M%S") + f"-{int(time.time() * 1000) % 1000:03d}"
+        path = CAPTURES_DIR / f"{stamp}_triage_{safe}.jpg"
+        n = 1
+        while path.exists():          # extremely unlikely after adding milliseconds, but never overwrite
+            path = CAPTURES_DIR / f"{stamp}_triage_{safe}_{n}.jpg"
+            n += 1
+        img.convert("RGB").save(path, quality=90)
     except Exception as exc:
         print(f"Warning: could not save capture: {exc}")
 

@@ -1,0 +1,14 @@
+# datasets - too large / not code
+data/
+*.zip
+
+# model checkpoints - too large for git, track separately (e.g. LFS or a release asset)
+*.pt
+*.pth
+
+# local backups from the installer script
+triage/_backup/
+
+# python
+__pycache__/
+*.pyc

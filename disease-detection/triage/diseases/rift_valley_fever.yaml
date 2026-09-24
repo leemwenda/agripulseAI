@@ -17,6 +17,7 @@ signs:
   fever: 2
   bloody_diarrhoea: 2
   pale_or_yellow_gums: 1
+  bleeding_from_orifices: 1
   multiple_animals_affected: 1
 differentials:
   - Brucellosis (single/sporadic abortions, not a storm)

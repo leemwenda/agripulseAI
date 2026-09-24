@@ -18,6 +18,7 @@ signs:                     # weight 3 = characteristic, 2 = common, 1 = supporti
   rapid_weight_loss: 1
   watery_eyes: 1
   diarrhoea: 1
+  isolating_from_herd: 1
 differentials:
   - Anaplasmosis
   - Babesiosis
